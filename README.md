@@ -13,7 +13,10 @@ A full-stack CRUD application for managing employees, their departments, roles, 
 
 ## Current Status
 
-> **Step 1 Complete** — Project foundation and folder structure set up. Frontend and backend scaffolded and verified to start successfully. No employee features implemented yet.
+- **Step 1 Complete** — Project foundation and folder structure set up.
+- **Step 2 Complete** — MySQL schema and seed data implemented (`backend/schema.sql`).
+- **Step 3 Complete** — Express backend REST API implemented with CRUD operations and validation.
+- **Step 4 Complete** — Backend automated testing implemented using Jest and Supertest.
 
 ## Getting Started
 
@@ -61,6 +64,14 @@ npm run dev
 
 ## Testing
 
-> Tests will be added in a later step.
-> - Backend: Jest + Supertest
-> - Frontend: Jest + React Testing Library
+### Backend Tests
+Backend automated tests are written using **Jest** and **Supertest**.
+They cover all CRUD operations, validation rules, error handling, and manager hierarchy edge cases.
+
+To run the backend tests:
+```bash
+cd backend
+npm test
+```
+
+> **Note**: Frontend tests will be added in a later step using Jest + React Testing Library.
