@@ -1,27 +1,23 @@
-/* Reset and Base Styles */
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f6f8;
-  color: #333;
-}
-
+/* App Layout */
 .app-container {
-  max-width: 1000px;
+  width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
 }
 
+.app-header {
+  margin-bottom: 2rem;
+}
+
 .app-header h1 {
-  margin-top: 0;
-  color: #2c3e50;
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0f172a;
   border-bottom: 2px solid #e2e8f0;
   padding-bottom: 1rem;
+  text-align: left;
 }
 
 /* Toolbar */
@@ -41,79 +37,86 @@ body {
 }
 
 .search-input, .dept-select {
-  padding: 0.5rem 1rem;
+  padding: 0.65rem 1rem;
   border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  font-size: 1rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background-color: #ffffff;
 }
 
 .search-input {
   flex-grow: 1;
-  max-width: 400px;
+  max-width: 450px;
 }
 
 /* Buttons */
 button {
   cursor: pointer;
-  padding: 0.5rem 1rem;
+  padding: 0.65rem 1.25rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 0.95rem;
-  font-weight: 500;
-  transition: opacity 0.2s;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 button:hover {
   opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
 .btn-primary {
-  background-color: #3b82f6;
+  background-color: #2563eb;
   color: white;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.2);
 }
 
 .btn-edit {
-  background-color: #f59e0b;
+  background-color: #d97706;
   color: white;
   margin-right: 0.5rem;
-  padding: 0.35rem 0.75rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.875rem;
 }
 
 .btn-delete {
-  background-color: #ef4444;
+  background-color: #dc2626;
   color: white;
-  padding: 0.35rem 0.75rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.875rem;
 }
 
 .btn-submit {
-  background-color: #10b981;
+  background-color: #16a34a;
   color: white;
 }
 
 .btn-cancel {
   background-color: #e2e8f0;
-  color: #475569;
+  color: #334155;
 }
 
 /* Alert & Error */
 .alert {
-  padding: 1rem;
+  padding: 1rem 1.25rem;
   margin-bottom: 1.5rem;
-  border-radius: 4px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  font-size: 0.95rem;
 }
 
 .alert.error {
-  background-color: #fee2e2;
-  color: #b91c1c;
-  border: 1px solid #f87171;
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
 }
 
 .close-btn {
@@ -137,98 +140,125 @@ button:disabled {
 .table-container {
   background: white;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
   overflow-x: auto;
+  border: 1px solid #e2e8f0;
 }
 
 .employee-table {
   width: 100%;
   border-collapse: collapse;
+  text-align: left;
 }
 
 .employee-table th, .employee-table td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .employee-table th {
   background-color: #f8fafc;
   font-weight: 600;
   color: #475569;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.employee-table tr:last-child td {
+  border-bottom: none;
+}
+
+.employee-table tr:hover {
+  background-color: #f8fafc;
 }
 
 .employee-name {
   font-weight: 600;
+  color: #0f172a;
+  font-size: 0.975rem;
 }
 
 .employee-email {
   font-size: 0.85rem;
   color: #64748b;
+  margin-top: 0.15rem;
 }
 
 .no-manager {
   color: #94a3b8;
   font-style: italic;
+  font-size: 0.9rem;
 }
 
 .status-badge {
+  display: inline-block;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.8rem;
+  font-weight: 600;
   text-transform: capitalize;
 }
 
 .status-badge.active {
-  background-color: #d1fae5;
-  color: #065f46;
+  background-color: #dcfce7;
+  color: #15803d;
 }
 
 .status-badge.inactive {
   background-color: #f1f5f9;
-  color: #475569;
+  color: #64748b;
+}
+
+.actions-cell {
+  white-space: nowrap;
 }
 
 /* States */
 .loading-state, .empty-state {
   text-align: center;
-  padding: 3rem;
+  padding: 3.5rem 2rem;
   color: #64748b;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  font-size: 1.05rem;
 }
 
-/* Modal Form */
+/* Modal Form & Overlay */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(2px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 1rem;
 }
 
 .modal-content {
   background: white;
   padding: 2rem;
-  border-radius: 8px;
+  border-radius: 12px;
   width: 100%;
-  max-width: 500px;
+  max-width: 520px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .modal-content h2 {
   margin-top: 0;
   margin-bottom: 1.5rem;
-  color: #1e293b;
+  color: #0f172a;
+  font-size: 1.35rem;
+  font-weight: 700;
 }
 
 .form-group {
@@ -237,25 +267,28 @@ button:disabled {
 
 .form-group label {
   display: block;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 0.5rem;
   color: #334155;
+  font-size: 0.9rem;
 }
 
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.65rem 0.85rem;
   border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  font-size: 1rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background-color: #fff;
+  transition: border-color 0.2s;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 .form-actions {
