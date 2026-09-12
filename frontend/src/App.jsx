@@ -17,9 +17,10 @@ function App() {
   // Debounce search term to avoid spamming the API
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
-  // Form states
+  // Form and Modal states
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState(null);
+  const [deletingEmployee, setDeletingEmployee] = useState(null);
 
   // Handle search debouncing
   useEffect(() => {
@@ -58,22 +59,24 @@ function App() {
     setIsFormOpen(true);
   };
 
-  const handleDeleteClick = async (employee) => {
-    if (isDeleting) return; // Prevent duplicate clicks
-    
-    if (window.confirm(`Are you sure you want to delete ${employee.name}?`)) {
-      try {
-        setIsDeleting(true);
-        setError(null);
-        await api.deleteEmployee(employee.id);
-        await fetchEmployees();
-      } catch (err) {
-        setError(err.message || 'Failed to delete employee.');
-        // Auto-clear delete error after a few seconds
-        setTimeout(() => setError(null), 5000);
-      } finally {
-        setIsDeleting(false);
-      }
+  const handleDeleteClick = (employee) => {
+    setDeletingEmployee(employee);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingEmployee || isDeleting) return;
+
+    try {
+      setIsDeleting(true);
+      setError(null);
+      await api.deleteEmployee(deletingEmployee.id);
+      setDeletingEmployee(null);
+      await fetchEmployees();
+    } catch (err) {
+      setError(err.message || 'Failed to delete employee.');
+      setTimeout(() => setError(null), 5000);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -155,6 +158,39 @@ function App() {
             onSubmit={handleFormSubmit}
             onCancel={() => setIsFormOpen(false)}
           />
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {deletingEmployee && (
+          <div className="modal-overlay" onClick={() => !isDeleting && setDeletingEmployee(null)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <h2>Confirm Delete</h2>
+              <p style={{ margin: '1rem 0', color: '#475569', fontSize: '1rem' }}>
+                Are you sure you want to delete <strong>{deletingEmployee.name}</strong> ({deletingEmployee.email})?
+              </p>
+              <p style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '1.5rem' }}>
+                This action cannot be undone.
+              </p>
+              <div className="form-actions">
+                <button 
+                  type="button" 
+                  className="btn-cancel" 
+                  onClick={() => setDeletingEmployee(null)}
+                  disabled={isDeleting}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="button" 
+                  className="btn-delete" 
+                  onClick={handleConfirmDelete}
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? 'Deleting...' : 'Confirm Delete'}
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </main>
     </div>
