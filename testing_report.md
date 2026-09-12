@@ -1,4 +1,4 @@
-# Step 4 — Backend Automated Testing: Completion Report
+# Automated Testing Report
 
 ---
 
