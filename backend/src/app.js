@@ -1,4 +1,6 @@
 const express = require('express');
+const employeeRoutes = require('./routes/employeeRoutes');
+const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
@@ -9,5 +11,11 @@ app.use(express.json());
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Employee Resource Directory API is running' });
 });
+
+// Employee API routes
+app.use('/api/employees', employeeRoutes);
+
+// Centralized error handling — must be registered AFTER all routes
+app.use(errorHandler);
 
 module.exports = app;
