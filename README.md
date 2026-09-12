@@ -1,42 +1,116 @@
 # Employee Resource Directory
 
-A full-stack CRUD application for managing employees, their departments, roles, and reporting hierarchy within an organization.
+A full-stack employee management web application built with Node.js, Express, MySQL, and React (Vite). It provides full CRUD capabilities for managing organizational employees, department organization, roles, active/inactive statuses, and hierarchical reporting manager relationships.
 
-## Project Architecture
+## Features
+
+- **Employee Listing**: View complete employee directory in a responsive tabular interface.
+- **Search**: Real-time name search with automatic input debouncing.
+- **Department Filtering**: Filter employee records by exact department (Engineering, Sales, Finance, HR).
+- **Combined Search & Filter**: Seamlessly search by name while filtering by department simultaneously.
+- **Add Employee**: Create new employee records with client and server-side validation.
+- **Edit Employee**: Update employee details, department, role, status, and reporting manager.
+- **Delete Employee**: Remove employees with an in-app confirmation modal dialog.
+- **Reporting Manager Hierarchy**: Self-referencing relationship linking employees to their reporting managers. Handles manager deletion gracefully (`ON DELETE SET NULL`).
+- **Validation**:
+  - Required fields check (Name, Email, Department, Role).
+  - Server-side and client-side email format regex validation.
+  - Unique email enforcement across active employee database.
+  - Manager ID existence verification.
+  - Prevention of self-manager assignment (an employee cannot report to themselves).
+- **State Management & UX**:
+  - Dynamic loading spinners.
+  - User-friendly error alert banners.
+  - Clean empty state displays when no records match search/filter criteria.
+
+## Quick Start — How to Run the Project (After Setup)
+
+Once database setup (`backend/schema.sql`) and environment setup (`backend/.env`) are completed:
+
+1. **Start Backend Server** (Terminal 1):
+   ```bash
+   cd backend
+   npm run dev
+   ```
+   *Runs backend API on `http://localhost:5000`.*
+
+2. **Start Frontend App** (Terminal 2):
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+   *Runs React UI on `http://localhost:5173`.*
+
+3. **Open Application**:
+   Navigate to **`http://localhost:5173`** in your browser.
+
+---
+
+## Tech Stack
+
+- **Frontend**: React, Vite, JavaScript, CSS (Vanilla), Fetch API
+- **Backend**: Node.js, Express, `mysql2/promise` (connection pooling), `dotenv`, `cors`
+- **Database**: MySQL Server
+- **Testing**: Jest, Supertest
+
+## Project Structure
 
 ```text
-React Frontend
-      ↓
-Express REST API
-      ↓
-MySQL Database
+Employee Resource Directory/
+├── backend/
+│   ├── src/
+│   │   ├── controllers/
+│   │   │   └── employeeController.js
+│   │   ├── middleware/
+│   │   │   └── errorHandler.js
+│   │   ├── routes/
+│   │   │   └── employeeRoutes.js
+│   │   ├── app.js
+│   │   ├── db.js
+│   │   └── server.js
+│   ├── tests/
+│   │   └── employee.test.js
+│   ├── .env.example
+│   ├── package.json
+│   └── schema.sql
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── EmployeeForm.jsx
+│   │   │   └── EmployeeTable.jsx
+│   │   ├── api.js
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── index.html
+│   ├── package.json
+│   └── vite.config.js
+├── .gitignore
+└── README.md
 ```
 
-* **React Frontend**: Handles the user interface, employee tables, forms, and client-side validation.
-* **Express REST API**: Serves JSON data, processes requests, and handles server-side validation.
-* **MySQL Database**: Stores employee records and hierarchy relationships.
-* The database connection is configured through environment variables.
-* The included `backend/schema.sql` script allows another developer to recreate the exact database locally.
+## Database Setup
 
-## Local MySQL Setup
+This application uses MySQL Server. The repository does **NOT** connect to or rely on any remote or original developer database. Every developer cloning this repository must use their own local MySQL instance.
 
-This project uses MySQL. The repository **does NOT depend on the original developer's personal/local MySQL instance**. 
-Instead, every developer who clones this repository must use their own local MySQL instance.
+### Step-by-Step Local Database Initialization
 
-* Another person cloning the repository cannot access the original developer's `localhost` database.
-* The repository includes `backend/schema.sql`, which contains the complete database and table definitions along with seed data.
-* You must execute `backend/schema.sql` using MySQL Workbench or the MySQL CLI on your machine.
-* This will create the required `employee_resource_directory` database, the `employees` table, and insert seed data.
-* The backend connects to this database using environment variables provided in `backend/.env`.
+1. Ensure **MySQL Server** is installed and running locally on port `3306`.
+2. Open **MySQL Workbench** or your preferred MySQL CLI tool.
+3. Open the file `backend/schema.sql` located inside the project repository.
+4. Execute the entire `schema.sql` script.
+5. Verify that:
+   - The database `employee_resource_directory` is created.
+   - The table `employees` is created with auto-incrementing primary key `id`.
+   - The self-referencing foreign key constraint `manager_id -> employees(id)` with `ON DELETE SET NULL` is established.
+   - 12 initial seed employees are inserted across 4 departments (Engineering, Sales, Finance, HR) with multi-level manager hierarchy.
 
-## Environment Configuration
+## Environment Variables
 
-This repository intentionally does **NOT** contain the real `.env` file, as it contains sensitive database credentials.
+Real credentials are never committed to version control. The repository ignores `.env` files via `.gitignore`.
 
-To run the project, you must create your own configuration file:
-`backend/.env`
-
-Use the following format (you can copy this from `backend/.env.example` if available, or create it from scratch):
+Create a file named `backend/.env` based on `backend/.env.example`:
 
 ```env
 DB_HOST=localhost
@@ -47,109 +121,117 @@ DB_NAME=employee_resource_directory
 PORT=5000
 ```
 
-* **Replace `your_mysql_password`** with your own local MySQL password.
-* Do **NOT** commit `.env` to GitHub. The project's `.gitignore` is configured to ignore it.
-* Database credentials are never hardcoded in the source code.
+> **Note**: Replace `your_mysql_password` with your local MySQL user password.
 
-## How Another Developer Can Run This Project
-
-Follow these steps to set up the project from a fresh clone:
+## Installation
 
 ### 1. Clone the repository
-
 ```bash
 git clone <repository-url>
-cd employee-resource-directory
+cd "Employee Resource Directory"
 ```
 
-### 2. Set up MySQL
-
-MySQL Server must be installed and running on your machine.
-1. Open MySQL Workbench (or MySQL CLI) and connect to your local MySQL server.
-2. Open the file `backend/schema.sql`.
-3. Execute the complete script. 
-This step creates the `employee_resource_directory` database, the `employees` table, and inserts the initial seed employees.
-
-### 3. Configure backend environment
-
-Create a file named `.env` inside the `backend` folder:
-`backend/.env`
-
-Copy the variables from above (or `.env.example`) into it, and update `DB_PASSWORD` to match your own local MySQL credentials.
-
-### 4. Install backend dependencies
-
+### 2. Install Backend Dependencies
 ```bash
 cd backend
 npm install
 ```
 
-### 5. Start backend
-
-Start the backend server in development mode (which enables auto-reloading):
-
+### 3. Install Frontend Dependencies
 ```bash
-npm run dev
-```
-
-Alternatively, you can run `npm start`. 
-The backend connects to your local MySQL instance and will run on `http://localhost:5000`.
-
-### 6. Install frontend dependencies
-
-Open a **new** terminal window and run:
-
-```bash
-cd frontend
+cd ../frontend
 npm install
 ```
 
-### 7. Start frontend
+## Running the Application
 
-Start the React development server:
-
+### 1. Start the Backend API Server
+In the `backend/` directory, run:
 ```bash
 npm run dev
 ```
+*(Runs `node --watch src/server.js` on `http://localhost:5000`)*
 
-### 8. Open the application
-
-The frontend runs on the default Vite port. Open your browser and navigate to:
-`http://localhost:5173`
-
-You should now see the Employee Resource Directory UI communicating with your local backend and database.
-
-## API Endpoints
-
-The backend implements the following RESTful endpoints:
-
-```text
-GET    /api/employees
-GET    /api/employees/:id
-POST   /api/employees
-PUT    /api/employees/:id
-DELETE /api/employees/:id
+### 2. Start the Frontend React Client
+In a separate terminal, inside the `frontend/` directory, run:
+```bash
+npm run dev
 ```
+*(Runs Vite dev server on `http://localhost:5173`)*
 
-The `GET /api/employees` endpoint also supports query parameters for filtering:
-* `search`: Filters employees by name (e.g., `?search=Sarah`)
-* `department`: Filters employees by exact department (e.g., `?department=Engineering`)
+Open your browser and navigate to **`http://localhost:5173`**.
+
+## API Documentation
+
+Base URL: `http://localhost:5000/api`
+
+| Method | Endpoint | Description | Query Parameters / Body | Status Codes |
+| :--- | :--- | :--- | :--- | :--- |
+| **GET** | `/employees` | Retrieve all employees | Query: `?search=<name>&department=<dept>` | `200 OK`, `500 Internal Error` |
+| **GET** | `/employees/:id` | Get single employee details | URL parameter: `id` | `200 OK`, `404 Not Found`, `500 Internal Error` |
+| **POST** | `/employees` | Create a new employee | Body: `{ name, email, department, role, manager_id, status }` | `201 Created`, `400 Bad Request`, `500 Internal Error` |
+| **PUT** | `/employees/:id` | Update an existing employee | Body: `{ name, email, department, role, manager_id, status }` | `200 OK`, `400 Bad Request`, `404 Not Found`, `500 Internal Error` |
+| **DELETE**| `/employees/:id` | Delete an employee | URL parameter: `id` | `200 OK`, `404 Not Found`, `500 Internal Error` |
+
+## Validation and Error Handling
+
+- **Server-Side Validation**: Sanitizes and validates inputs before touching the database. Returns clean JSON error objects (`{ "error": "Reason..." }`).
+- **Duplicate Email Handling**: Prevents duplicate emails during creation and updates (excluding the employee's own record during update).
+- **Manager Validation**: Checks that `manager_id` exists in the database and ensures `manager_id != id` to prevent self-management loops.
+- **Centralized Error Middleware**: Intercepts unhandled backend errors in `app.js` and outputs generic safe HTTP 500 error messages without leaking database stack traces.
 
 ## Testing
 
-The project includes automated backend API tests using **Jest** and **Supertest**. 
+### Backend API Automated Tests
 
-To run the backend test suite:
+The backend includes a comprehensive automated integration test suite built with **Jest** and **Supertest**.
+
+To execute the tests:
 ```bash
 cd backend
 npm test
 ```
-*(Frontend testing has not been implemented yet).*
+- Tests all 5 API endpoints (GET, POST, PUT, DELETE).
+- Tests search, filtering, non-existent 404 routes, missing required fields, duplicate emails, invalid manager IDs, and self-management prevention.
 
-## Security / Credentials
+### Frontend Production Build Verification
 
-* The `.env` file contains your local database credentials.
-* `.env` is intentionally ignored by Git to prevent leaking secrets.
-* `.env.example` contains placeholders only and is safe to commit.
-* No real database password is ever committed to the repository.
-* Another developer running this code must provide their own local MySQL credentials.
+To verify that the frontend builds cleanly for production:
+```bash
+cd frontend
+npm run build
+```
+
+## Architecture
+
+```text
+React Frontend (SPA on Vite)
+      ↓ HTTP / JSON (Fetch API)
+Express REST API (Routing & Controllers)
+      ↓ SQL Queries
+mysql2 Connection Pool (promise-based)
+      ↓ TCP Connection
+MySQL Database (employee_resource_directory)
+```
+
+- **Frontend**: Renders modern state-driven React UI, manages search debouncing, form modals, and async API requests.
+- **Express Backend**: Exposes REST API endpoints, performs validation, and executes parameterized SQL queries.
+- **Database Layer**: Stores relational employee records with self-referencing foreign keys for manager hierarchies.
+
+## Security & Configuration
+
+- **Environment Isolation**: Database credentials strictly loaded via `process.env` through `dotenv`.
+- **SQL Injection Prevention**: All MySQL database queries use parameterized placeholders (`?`).
+- **CORS Configured**: Cross-Origin Resource Sharing enabled for safe local development.
+- **Git Hygiene**: `.env` and `node_modules` are excluded via `.gitignore`.
+
+## Assumptions
+
+- The MySQL database is running locally on port `3306`.
+- Direct reports become top-level employees (`manager_id = NULL`) if their manager is deleted (`ON DELETE SET NULL`).
+- Departments used in standard dropdowns: Engineering, Sales, Finance, HR.
+
+## Known Limitations
+
+- Single organization structure (no multi-tenant support).
+- Basic role strings rather than a dynamic role management table.
